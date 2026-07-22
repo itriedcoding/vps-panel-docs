@@ -1,3 +1,5 @@
+'use client'
+
 import { CodeBlock } from '@/components/CodeBlock'
 import Link from 'next/link'
 
@@ -23,21 +25,92 @@ export default function InstallationPage() {
 
       <h2>One-Liner Install</h2>
       <p>
-        The easiest way to install VPS Panel is using our installation script. Simply run this command
-        as root on your server:
+        The easiest way to install VPS Panel is using our interactive installation script. 
+        Simply run this command as root on your server:
       </p>
       <CodeBlock
-        code="bash <(curl -s https://your-domain.com/install.sh)"
+        code="curl -sL https://raw.githubusercontent.com/itriedcoding/vps-panel/main/install.sh | bash"
         language="bash"
         filename="Terminal"
         showLineNumbers={false}
       />
 
+      <h2>Interactive Menu</h2>
       <p>
-        If you want to specify a custom domain during installation, use the <code>--domain</code> flag:
+        The installer features a beautiful interactive menu that guides you through the setup process:
       </p>
+
+      <div className="bg-dark-800/50 border border-dark-600 rounded-lg p-4 my-4 font-mono text-sm">
+        <pre className="text-green-400">{`
+  ██╗   ██╗██████╗ ███████╗    ███████╗██╗   ██╗███████╗███╗   ██╗████████╗
+  ██║   ██║██╔══██╗██╔════╝    ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝
+  ██║   ██║██████╔╝█████╗      ███████╗██║   ██║█████╗  ██╔██╗ ██║   ██║
+  ╚██████╔╝██║     ███████╗    ███████║╚██████╔╝███████╗██║ ╚████║   ██║
+   ╚═════╝ ╚═╝     ╚══════╝    ╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝
+
+  Modern VPS Control Panel • v1.0.0
+  Ubuntu • Debian • Arch Linux
+
+─────────────────────────────────────────────────────────────────
+  System:        Ubuntu 24.04
+  Architecture:  x86_64
+  Status:        Not Installed
+
+  Select an option:
+
+    1  │  Install Panel       Full installation
+    2  │  Configure Domain    Set custom domain before install
+    3  │  View Help           Show installation options
+    4  │  Exit
+
+  Enter choice [1-5]: _`}</pre>
+      </div>
+
+      <h2>Installation Configuration</h2>
+      <p>
+        When you select Install, the wizard will prompt you for configuration:
+      </p>
+
+      <div className="bg-dark-800/50 border border-dark-600 rounded-lg p-4 my-4 font-mono text-sm">
+        <pre className="text-green-400">{`
+  Installation Configuration
+
+  Panel Port: (press Enter for default: 8080)
+  → 8080
+  ✓ Panel port: 8080
+
+  Custom Domain: (press Enter to skip, use server IP)
+  → vps.example.com
+  ✓ Domain: vps.example.com
+
+─────────────────────────────────────────────────────────────────
+  Ready to install:
+    • Panel Port:  8080
+    • Domain:      vps.example.com
+    • Install Dir: /opt/vspanel
+    • OS:          Ubuntu 24.04
+─────────────────────────────────────────────────────────────────
+
+  Proceed with installation? (y/N): _`}</pre>
+      </div>
+
+      <h2>CLI Flags</h2>
+      <p>
+        For automated installs (without the menu), use CLI flags:
+      </p>
+
       <CodeBlock
-        code="bash <(curl -s https://your-domain.com/install.sh) --domain panel.example.com"
+        code="# Interactive mode (recommended)
+curl -sL https://raw.githubusercontent.com/itriedcoding/vps-panel/main/install.sh | bash
+
+# Direct install with flags
+curl -sL https://raw.githubusercontent.com/itriedcoding/vps-panel/main/install.sh | bash -s -- --domain vps.example.com
+
+# Update existing installation
+curl -sL https://raw.githubusercontent.com/itriedcoding/vps-panel/main/install.sh | bash -s -- --update
+
+# Uninstall
+curl -sL https://raw.githubusercontent.com/itriedcoding/vps-panel/main/install.sh | bash -s -- --uninstall"
         language="bash"
         filename="Terminal"
       />
@@ -65,6 +138,11 @@ export default function InstallationPage() {
             <td><code>--port 3000</code></td>
           </tr>
           <tr>
+            <td><code>--install</code></td>
+            <td>Run installation without the interactive menu</td>
+            <td><code>--install</code></td>
+          </tr>
+          <tr>
             <td><code>--update</code></td>
             <td>Update an existing installation</td>
             <td><code>--update</code></td>
@@ -74,27 +152,19 @@ export default function InstallationPage() {
             <td>Remove VPS Panel completely</td>
             <td><code>--uninstall</code></td>
           </tr>
-          <tr>
-            <td><code>--skip-nginx</code></td>
-            <td>Skip Nginx installation</td>
-            <td><code>--skip-nginx</code></td>
-          </tr>
-          <tr>
-            <td><code>--skip-ssl</code></td>
-            <td>Skip SSL certificate setup</td>
-            <td><code>--skip-ssl</code></td>
-          </tr>
         </tbody>
       </table>
 
       <h2>What Gets Installed</h2>
       <p>The installation script will set up the following components:</p>
       <ul>
-        <li><strong>VPS Panel Backend</strong> - Node.js API server and WebSocket handlers</li>
-        <li><strong>VPS Panel Frontend</strong> - React-based dashboard interface</li>
+        <li><strong>Go API Server</strong> - High-performance backend for system operations (port 8080)</li>
+        <li><strong>Web Dashboard</strong> - PHP-based control panel with dark theme UI</li>
+        <li><strong>WebSocket Server</strong> - Node.js server for real-time terminal (port 8081)</li>
+        <li><strong>Python Monitor</strong> - System metrics collector (CPU, RAM, disk, network)</li>
         <li><strong>Nginx</strong> - Reverse proxy for SSL termination and static files</li>
-        <li><strong>SQLite</strong> - Lightweight database for configuration</li>
-        <li><strong>Systemd Service</strong> - Auto-start on boot and process management</li>
+        <li><strong>SQLite</strong> - Lightweight database for sessions and configuration</li>
+        <li><strong>Systemd Services</strong> - Auto-start on boot and process management</li>
       </ul>
 
       <h2>Post-Installation Verification</h2>
@@ -102,7 +172,9 @@ export default function InstallationPage() {
       
       <h3>1. Check Service Status</h3>
       <CodeBlock
-        code="systemctl status vps-panel"
+        code="systemctl status vspanel
+systemctl status vspanel-web
+systemctl status vspanel-monitor"
         language="bash"
         filename="Terminal"
       />
@@ -112,38 +184,23 @@ export default function InstallationPage() {
         Open your browser and navigate to your panel URL. If you set up a domain, use:
       </p>
       <CodeBlock
-        code="https://panel.example.com"
+        code="https://vps.example.com"
         language="text"
       />
 
-      <p>If you didn't configure a domain, use:</p>
+      <p>If you didn't configure a domain, use your server IP:</p>
       <CodeBlock
-        code="http://your-server-ip:8080"
+        code="http://your-server-ip"
         language="text"
       />
 
-      <h3>3. Login with Default Credentials</h3>
+      <h3>3. Login with Credentials</h3>
       <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 my-4">
-        <p className="text-yellow-200 font-medium">⚠️ Important: Change these credentials immediately!</p>
+        <p className="text-yellow-200 font-medium">
+          ⚠️ Your password is displayed after installation. Save it - it won't be shown again!
+          Change the default password after first login.
+        </p>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Field</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Username</td>
-            <td><code>admin</code></td>
-          </tr>
-          <tr>
-            <td>Password</td>
-            <td><code>admin</code></td>
-          </tr>
-        </tbody>
-      </table>
 
       <h2>Troubleshooting</h2>
 

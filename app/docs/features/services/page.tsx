@@ -1,3 +1,7 @@
+'use client'
+
+import { CodeBlock } from '@/components/CodeBlock'
+
 export default function ServicesPage() {
   return (
     <div className="doc-content">

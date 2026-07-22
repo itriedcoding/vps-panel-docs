@@ -62,7 +62,7 @@ body {
   }
 
   .code-block {
-    @apply relative group bg-dark-950 border border-dark-700/50 rounded-xl overflow-hidden;
+    @apply relative bg-dark-950 border border-dark-700/50 rounded-xl overflow-hidden;
   }
 
   .code-header {

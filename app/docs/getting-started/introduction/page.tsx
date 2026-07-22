@@ -1,3 +1,5 @@
+'use client'
+
 import { CodeBlock } from '@/components/CodeBlock'
 import Link from 'next/link'
 

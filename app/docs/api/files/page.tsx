@@ -1,3 +1,5 @@
+'use client'
+
 import { CodeBlock } from '@/components/CodeBlock'
 
 export default function FileEndpointsPage() {
@@ -156,7 +158,7 @@ Content-Type: application/json
         filename="Response"
       />
 
-      <h2>Upload File</h3>
+      <h2>Upload File</h2>
       <p>
         Upload a file using multipart form data.
       </p>
